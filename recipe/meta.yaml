@@ -7,9 +7,11 @@ package:
 source:
   url: https://github.com/USGS-Astrogeology/{{ name }}/archive/{{ version }}.tar.gz
   sha256: fb9c92f59be3d089dc8908f2c7e0479a89b88171bf7b715261f83ed20d428c6c
+  patches:
+    - patches/parse.patch
 
 build:
-  number: 2
+  number: 3
   skip: true  # [py2k]
 
 requirements:
@@ -21,6 +23,7 @@ requirements:
     - python
     - nlohmann_json
     - pip
+    - setuptools
   run:
     - networkx
     - nlohmann_json
@@ -32,8 +35,11 @@ requirements:
     - scipy >=1.2.0,<1.6.0
     - spiceypy >=2.3.0
     - pyyaml
+    - setuptools
 
 test:
+  requires:
+    - setuptools
   imports:
     - ale
   commands:
