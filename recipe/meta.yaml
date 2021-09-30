@@ -5,8 +5,9 @@ package:
   version: {{ version }}
 
 source:
-  url: https://github.com/USGS-Astrogeology/{{ name }}/archive/{{ version }}.tar.gz
-  sha256: c3fa2405068150184f2e2717b1869e851030b09e5a16a21790efae89bb6011a9
+  path: ../../ale
+  patches:
+    - patches/parse.patch
 
 build:
   number: 0
@@ -17,6 +18,7 @@ requirements:
     - {{ compiler('cxx') }}
     - cmake >=3.15
     - eigen
+    - cspice
   host:
     - python
     - nlohmann_json
@@ -27,11 +29,11 @@ requirements:
     - nlohmann_json
     - numpy
     - pvl >=1.0
-    - python
+    - python=3.6.7
     - python-dateutil
     - pytz
     - scipy >=1.4.0
-    - spiceypy >=2.3.0
+    - spiceypy ==2.3.2
     - pyyaml
     - setuptools
 
