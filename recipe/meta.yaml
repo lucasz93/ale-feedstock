@@ -1,111 +1,59 @@
-# This file created by conda-build 3.21.4
-# meta.yaml template originally from:
-# /home/conda/recipe_root, last modified Mon Apr  5 18:50:29 2021
-# ------------------------------------------------
-
+{% set name = "ale" %}
+{% set version = "0.8.5" %}
 package:
-  name: ale
-  version: 0.8.5
+  name: {{ name|lower }}
+  version: {{ version }}
+
 source:
   path: ../../ale
+  patches:
+    - patches/parse.patch
+
 build:
-  number: '3'
-  string: py39h1a9c180_3
+  number: 3
+  skip: true  # [py2k]
+
 requirements:
   build:
-    - _libgcc_mutex 0.1 conda_forge
-    - _openmp_mutex 4.5 1_gnu
-    - binutils_impl_linux-64 2.35.1 h193b22a_2
-    - binutils_linux-64 2.35 h67ddf6f_30
-    - bzip2 1.0.8 h7f98852_4
-    - c-ares 1.17.1 h7f98852_1
-    - ca-certificates 2020.12.5 ha878542_0
-    - cmake 3.19.7 h3020d66_0
-    - cspice ==66
-    - eigen 3.3.9 h4bd325d_1
-    - expat 2.3.0 h9c3ff4c_0
-    - gcc_impl_linux-64 9.3.0 h70c0ae5_18
-    - gcc_linux-64 9.3.0 hf25ea35_30
-    - gxx_impl_linux-64 9.3.0 hd87eabc_18
-    - gxx_linux-64 9.3.0 h3fbe746_30
-    - kernel-headers_linux-64 2.6.32 h77966d4_13
-    - krb5 1.17.2 h926e7f8_0
-    - ld_impl_linux-64 2.35.1 hea4e1c9_2
-    - libcurl 7.76.0 hc4aaa36_0
-    - libedit 3.1.20191231 he28a2e2_2
-    - libev 4.33 h516909a_1
-    - libgcc-devel_linux-64 9.3.0 h7864c58_18
-    - libgcc-ng 9.3.0 h2828fa1_18
-    - libgomp 9.3.0 h2828fa1_18
-    - libnghttp2 1.43.0 h812cca2_0
-    - libssh2 1.9.0 ha56f1ee_6
-    - libstdcxx-devel_linux-64 9.3.0 hb016644_18
-    - libstdcxx-ng 9.3.0 h6de172a_18
-    - libuv 1.41.0 h7f98852_0
-    - lz4-c 1.9.3 h9c3ff4c_0
-    - ncurses 6.2 h58526e2_4
-    - openssl 1.1.1k h7f98852_0
-    - rhash 1.4.1 h7f98852_0
-    - sysroot_linux-64 2.12 h77966d4_13
-    - tk 8.6.10 h21135ba_1
-    - xz 5.2.5 h516909a_1
-    - zlib 1.2.11 h516909a_1010
-    - zstd 1.4.9 ha95c52a_0
+    - {{ compiler('cxx') }}
+    - cmake >=3.15
+    - eigen
+    - cspice
   host:
-    - _libgcc_mutex 0.1 conda_forge
-    - _openmp_mutex 4.5 1_gnu
-    - ca-certificates 2020.12.5 ha878542_0
-    - certifi 2020.12.5 py39hf3d152e_1
-    - ld_impl_linux-64 2.35.1 hea4e1c9_2
-    - libffi 3.3 h58526e2_2
-    - libgcc-ng 9.3.0 h2828fa1_18
-    - libgomp 9.3.0 h2828fa1_18
-    - libstdcxx-ng 9.3.0 h6de172a_18
-    - ncurses 6.2 h58526e2_4
-    - nlohmann_json 3.9.1 he1b5a44_0
-    - openssl 1.1.1k h7f98852_0
-    - pip 21.0.1 pyhd8ed1ab_0
-    - python 3.9.2 hffdb5ce_0_cpython
-    - python_abi 3.9 1_cp39
-    - readline 8.0 he28a2e2_2
-    - setuptools 49.6.0 py39hf3d152e_3
-    - sqlite 3.35.4 h74cdb3f_0
-    - tk 8.6.10 h21135ba_1
-    - tzdata 2021a he74cb21_0
-    - wheel 0.36.2 pyhd3deb0d_0
-    - xz 5.2.5 h516909a_1
-    - zlib 1.2.11 h516909a_1010
+    - python
+    - nlohmann_json
+    - pip
+    - setuptools
   run:
-    - libgcc-ng >=9.3.0
-    - libstdcxx-ng >=9.3.0
     - networkx
     - nlohmann_json
     - numpy
     - pvl >=1.0
-    - python >=3.9,<3.10.0a0
+    - python=3.6.7
     - python-dateutil
-    - python_abi 3.9.* *_cp39
     - pytz
-    - pyyaml
     - scipy >=1.2.0,<1.6.0
+    - spiceypy ==2.3.2
+    - pyyaml
     - setuptools
-    - spiceypy >=2.3.0
+
 test:
-  commands:
-    - test -e $PREFIX/lib/libale${SHLIB_EXT}
-  imports:
-    - ale
   requires:
     - setuptools
+  imports:
+    - ale
+  commands:
+    - test -e $PREFIX/lib/libale${SHLIB_EXT}  # [unix]
+    - if not exist %LIBRARY_BIN%\ale.dll exit 1  # [win]
+    - if not exist %LIBRARY_LIB%\ale.lib exit 1  # [win]
+
 about:
   home: https://github.com/USGS-Astrogeology/ale
   license: Unlicense
   license_file: LICENSE
-  summary: Abstraction Library for Ephemerides (ALE) for extracting and processing
-    planetary sensor ephemeris data.
+  summary: Abstraction Library for Ephemerides (ALE) for extracting and processing planetary sensor ephemeris data.
+
 extra:
-  copy_test_source_files: true
-  final: true
   recipe-maintainers:
-    - jessemapel
     - jlaura
+    - jessemapel
