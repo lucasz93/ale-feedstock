@@ -6,8 +6,6 @@ package:
 
 source:
   path: ../../ale
-  patches:
-    - patches/parse.patch
 
 build:
   number: 0
